@@ -31,7 +31,7 @@ jobs:
 
       - name: Publish NuGet package        
         run: |
-          nuget SetApiKey ${{ secrets.GITHUB_TOKEN }} https://nuget.pkg.github.com
+          nuget SetApiKey ${{ secrets.GITHUB_TOKEN }} -Source https://nuget.pkg.github.com
           nuget push ${{ env.PROJECT_SRC }}/${{ env.NUGET_PKG }}.nupkg -Source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
         env:
            NUGET_USER: ${{ github.actor }}
