@@ -34,7 +34,7 @@ jobs:
       - name: Publish NuGet package        
         run: |
           nuget sources Add -Name ${{ env.GITHUB_PKG_FEED }} -Source ${{ env.GITHUB_PKG_FEED_URL }} -username irrelevant -password ${{ secrets.GITHUB_TOKEN }}
-          # nuget sources Add -Name "CosGiantGitHubFeed" -Source ${{ env.GITHUB_PKG_URL }} -username irrelevant -password ${{ secrets.GITHUB_TOKEN }}
+          # nuget sources Add -Name ${{ env.GITHUB_PKG_FEED }} -Source ${{ env.GITHUB_PKG_URL }} -username irrelevant -password ${{ secrets.GITHUB_TOKEN }}
           nuget SetApiKey ${{ secrets.GITHUB_TOKEN }} -Source ${{ env.GITHUB_PKG_FEED }}
           # nuget SetApiKey ${{ secrets.GITHUB_TOKEN }} -Source ${{ env.GITHUB_PKG_FEED_URL }}
           nuget push ${{ env.PROJECT_SRC }}/${{ env.NUGET_PKG }}.nupkg -Source ${{ env.GITHUB_PKG_FEED }} -Verbosity detailed
