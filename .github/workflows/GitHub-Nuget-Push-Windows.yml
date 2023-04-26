@@ -1,0 +1,43 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI - Windows
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+  
+    env:
+      GITHUB_PKG_FEED: CosGiantGitHubFeed
+      GITHUB_PKG_FEED_URL: https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
+      PROJECT_SRC: src-nuget
+      NUGET_PKG: htmlagilitypack.1.11.46
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      - name: Publish NuGet package        
+        run: |
+          nuget sources Add -Name ${{ env.GITHUB_PKG_FEED }} -Source ${{ env.GITHUB_PKG_FEED_URL }} -username irrelevant -password ${{ secrets.GITHUB_TOKEN }}
+          # nuget sources Add -Name "CosGiantGitHubFeed" -Source ${{ env.GITHUB_PKG_URL }} -username irrelevant -password ${{ secrets.GITHUB_TOKEN }}
+          nuget SetApiKey ${{ secrets.GITHUB_TOKEN }} -Source ${{ env.GITHUB_PKG_FEED }}
+          # nuget SetApiKey ${{ secrets.GITHUB_TOKEN }} -Source ${{ env.GITHUB_PKG_FEED_URL }}
+          nuget push ${{ env.PROJECT_SRC }}/${{ env.NUGET_PKG }}.nupkg -Source ${{ env.GITHUB_PKG_FEED }} -Verbosity detailed
+        env:
+           NUGET_USER: ${{ github.actor }}
+           NUGET_API_KEY: ${{ secrets.GITHUB_TOKEN }}
